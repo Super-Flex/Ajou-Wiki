@@ -32,13 +32,13 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = "RENDER" not in os.environ
 
-ALLOWED_HOSTS = [
-    "localhost",
-]
+# ALLOWED_HOSTS = [
+#     "localhost",
+# ]
 
-RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+# RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+# if RENDER_EXTERNAL_HOSTNAME:
+#     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -50,15 +50,17 @@ THIRD_PARTY_APPS = [
 
 CUSTOM_APPS = [
     "users.apps.UsersConfig",
-    "rooms.apps.RoomsConfig",
-    "common.apps.CommonConfig",
-    "experiences.apps.ExperiencesConfig",
-    "categories.apps.CategoriesConfig",
-    "reviews.apps.ReviewsConfig",
-    "wishlists.apps.WishlistsConfig",
-    "bookings.apps.BookingsConfig",
-    "medias.apps.MediasConfig",
-    "direct_messages.apps.DirectMessagesConfig",
+    "wiki.apps.WikiConfig",
+    "wiki_detail.apps.WikiDetailConfig",
+    # "rooms.apps.RoomsConfig",
+    # "common.apps.CommonConfig",
+    # "experiences.apps.ExperiencesConfig",
+    # "categories.apps.CategoriesConfig",
+    # "reviews.apps.ReviewsConfig",
+    # "wishlists.apps.WishlistsConfig",
+    # "bookings.apps.BookingsConfig",
+    # "medias.apps.MediasConfig",
+    # "direct_messages.apps.DirectMessagesConfig",
 ]
 
 SYSTEM_APPS = [
