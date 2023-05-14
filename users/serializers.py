@@ -5,10 +5,10 @@ from .models import User
 class TinyUserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = "name"
+        fields = "__all__"
 
 
 class PrivateUserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = "name"
+        fields = "__all__"
