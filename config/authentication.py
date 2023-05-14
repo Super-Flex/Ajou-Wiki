@@ -21,6 +21,7 @@ class TrustMeBroAuthentication(BaseAuthentication):
 
 class JWTAuthentication(BaseAuthentication):
     def authenticate(self, request):
+        print("jwt hi")
         token = request.headers.get("Jwt")
         if not token:
             return None
