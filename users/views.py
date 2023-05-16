@@ -8,6 +8,10 @@ import jwt
 from django.conf import settings
 from users.models import User
 from . import serializers
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.core.mail import EmailMessage
 
 
 class Me(APIView):
@@ -42,25 +46,30 @@ class Users(APIView):  # 일반 유저 생성
         if serializer.is_valid():
             user = serializer.save()
             user.set_password(password)
+            user.is_active = False
             user.save()  # save해줘잉
+            token = jwt.encode(
+                {"pk": user.pk},
+                settings.SECRET_KEY,
+                algorithm="HS256",
+            )
+            message = (
+                "이메일 확인 -> "
+                + str(token)
+                + "\n 해당 URL로 접속하여 토큰 값을 입력해 주세요.\n URL = http://127.0.0.1:8000/api/v1/users/activate"
+            )
+            mail_title = "계정 활성화 확인 이메일"
+            mail_to = request.data.get("email")
+            email = EmailMessage(mail_title, message, to=[mail_to])
+            email.send()
+
             serializer = serializers.PrivateUserSerializer(user)
             return Response(serializer.data)
         else:
             return Response(serializer.errors)
 
 
-class PublicUser(APIView):
-    def get(self, request, username):
-        try:
-            user = User.objects.get(username=username)
-        except User.DoesNotExist:
-            raise NotFound
-        serializer = serializers.PrivateUserSerializer(user)
-        return Response(serializer.data)
-
-
 class ChangePassword(APIView):
-
     permission_classes = [IsAuthenticated]
 
     def put(self, request):
@@ -95,7 +104,6 @@ class LogIn(APIView):
 
 
 class LogOut(APIView):
-
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -123,3 +131,29 @@ class JWTLogIn(APIView):
             return Response({"token": token})
         else:
             return Response({"error": "wrong password"})
+
+
+from rest_framework.exceptions import AuthenticationFailed
+
+
+class Activate(APIView):
+    # permission_classes = [IsAuthenticated]
+    def post(self, request):
+        token = request.data.get("Jwt")
+        if not token:
+            return None
+        decoded = jwt.decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms=["HS256"],
+        )
+        pk = decoded.get("pk")
+        if not pk:
+            raise AuthenticationFailed("Invalid Token")
+        try:
+            user = User.objects.get(pk=pk)
+            user.is_active = True
+            user.save()
+            return Response({"ok": "good"})
+        except User.DoesNotExist:
+            raise AuthenticationFailed("User Not Found")

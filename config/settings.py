@@ -36,6 +36,7 @@ DEBUG = "RENDER" not in os.environ
 #     "localhost",
 # ]
 
+
 # RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 # if RENDER_EXTERNAL_HOSTNAME:
 #     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
@@ -195,3 +196,22 @@ REST_FRAMEWORK = {
         "config.authentication.JWTAuthentication",
     ]
 }
+
+
+# EMAIL
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"  # 메일 호스트 서버
+EMAIL_PORT = "587"  # 서버 포트
+EMAIL_HOST_USER = "AjouWiki@gmail.com"  # 우리가 사용할 Gmail
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")  # 우리가 사용할 Gmail p
+EMAIL_USE_TLS = True  # TLS 보안 설정
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # 응답 메일 관련 설정
+
+
+"""
+$ python manage.py shell
+from django.core.mail import EmailMessage
+email = EmailMessage('title', 'content', to=['apark0907@ajou.ac.kr'])
+email.send()
+"""
