@@ -81,7 +81,7 @@ class ChangePassword(APIView):
         if user.check_password(old_password):  # 예전 비번 확인
             user.set_password(new_password)
             user.save()
-            return Response(status=status.HTTP_200_OK)
+            return Response({"result": "OK", "status":200})
         else:
             raise ParseError
 
@@ -98,9 +98,9 @@ class LogIn(APIView):
         )
         if user:
             login(request, user)
-            return Response({"ok": "Welcome!"})
+            return Response({"result": "OK", "status":200})
         else:
-            return Response({"error": "wrong password"})
+            return Response({"result": "Forbidden", "status":403})
 
 
 class LogOut(APIView):
@@ -157,3 +157,14 @@ class Activate(APIView):
             return Response({"ok": "good"})
         except User.DoesNotExist:
             raise AuthenticationFailed("User Not Found")
+
+class is_email_available(APIView):
+    def post(self, request):
+        email = request.data.get("email", "None")
+        if email == "None":
+            return Response({"result": "Forbidden", "status":403})
+        try:
+            User.objects.get(email=email)
+            return Response({"result": "possible email", "status":200})
+        except User.DoesNotExist:
+            return Response({"result": "impossible email", "status":403})

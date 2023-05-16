@@ -27,3 +27,8 @@ class User(AbstractUser):
     email = models.EmailField(
         max_length=30,
     )
+
+    student_id = models.TextField(
+        unique=True,
+        default=0
+    )

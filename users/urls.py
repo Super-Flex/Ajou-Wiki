@@ -11,5 +11,6 @@ urlpatterns = [
     path("token-login", obtain_auth_token),
     path("jwt-login", views.JWTLogIn.as_view()),
     path("activate", views.Activate.as_view()),
+    path("is-email-available", views.is_email_available.as_view()),
     # path("email-auth/<str:token>/", views.JWTLogIn.as_view()),
 ]
