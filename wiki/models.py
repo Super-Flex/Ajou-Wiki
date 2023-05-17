@@ -16,7 +16,14 @@ class Wiki(CommonModel):
         "wiki_detail.Wiki_Detail",
         null=True,
         blank=True,
-        related_name="wiki_detail",
+        related_name="wiki",
+    )
+
+    user_id = models.ForeignKey(
+        "users.User",
+        related_name="wiki",
+        on_delete= models.CASCADE,
+        null=True,
     )
 
     # tag_id = models.ManyToManyField(

@@ -98,7 +98,8 @@ class LogIn(APIView):
         )
         if user:
             login(request, user)
-            return Response({"result": "OK", "status":200})
+            serializer = serializers.PrivateUserSerializer(user)
+            return Response({"result": "OK", "status":200, "user_info":serializer.data})
         else:
             return Response({"result": "Forbidden", "status":403})
 
